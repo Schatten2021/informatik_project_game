@@ -1,0 +1,55 @@
+<mxfile host="Electron" modified="2024-06-09T14:23:56.457Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.5.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="lpFa-trW3OhJuE_uLE-S" version="24.5.1" type="device">
+  <diagram name="Page-1" id="JuN5HIZVQ4OYDldJVSdp">
+    <mxGraphModel dx="1062" dy="619" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-5" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="275" y="400" width="300" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-3" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="325" y="450" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-2" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="375" y="500" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-4" value="ServerConnection" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="395" y="470" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-6" value="Server" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="395" y="410" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-7" value="Connection" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="395" y="535" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-8" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="LKpuTsfycSIKNXJ3pgHK-5" target="LKpuTsfycSIKNXJ3pgHK-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="510" as="sourcePoint" />
+            <mxPoint x="590" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-9" value="API to the rest of the program" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="560" y="335" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-10" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="LKpuTsfycSIKNXJ3pgHK-2" target="LKpuTsfycSIKNXJ3pgHK-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="510" as="sourcePoint" />
+            <mxPoint x="630" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-11" value="Auto reload" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="600" y="525" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-12" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="LKpuTsfycSIKNXJ3pgHK-3" target="LKpuTsfycSIKNXJ3pgHK-13">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="510" as="sourcePoint" />
+            <mxPoint x="630" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LKpuTsfycSIKNXJ3pgHK-13" value="Encoding /&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;decoding packets&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="600" y="410" width="117" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
