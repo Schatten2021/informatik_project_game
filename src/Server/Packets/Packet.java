@@ -8,5 +8,5 @@ public abstract class Packet {
     public abstract byte[] toBytes();
     public static Packet fromStream(InputStream stream) throws IOException {
         throw new RuntimeException("Not implemented yet");
-    };
+    }
 }

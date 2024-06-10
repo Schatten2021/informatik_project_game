@@ -15,11 +15,11 @@ import Server.Packets.Upstream.Login;
 import logging.Logger;
 
 public class Connection {
-    public Queue<Packet> incoming = new Queue<>();
-    public Queue<Packet> outgoing = new Queue<>();
+    public final Queue<Packet> incoming = new Queue<>();
+    public final Queue<Packet> outgoing = new Queue<>();
     private State status = State.NOT_CONNECTED;
 
-    private SocketAddress address;
+    private final SocketAddress address;
     private final Socket socket;
     private InputStream in;
     private OutputStream out;

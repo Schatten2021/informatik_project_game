@@ -31,7 +31,7 @@ public class Login extends Packet {
         byte[] usernameBytes = username.getBytes();
         byte[] passwordBytes = password.getBytes();
         byte[] bytes = new byte[usernameBytes.length + passwordBytes.length + 1];
-        bytes[0] = this.id;
+        bytes[0] = id;
         System.arraycopy(usernameBytes, 0, bytes, 1, usernameBytes.length);
         System.arraycopy(passwordBytes, 0, bytes, usernameBytes.length + 1, passwordBytes.length);
         return bytes;

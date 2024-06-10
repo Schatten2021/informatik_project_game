@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class AbilityField implements Field{
-    private IntegerField id;
-    private StringField name;
-    private ArrayField<IntegerField> effects;
+    private final IntegerField id;
+    private final StringField name;
+    private final ArrayField<IntegerField> effects;
     public AbilityField(IntegerField id, StringField name, ArrayField<IntegerField> effects) {
         this.id = id;
         this.name = name;

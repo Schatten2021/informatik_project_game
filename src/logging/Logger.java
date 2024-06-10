@@ -24,7 +24,7 @@ public class Logger {
                 subLoggers.put(names[0], new logger(loggerFullName, handlers, this.level));
             }
 
-            // get the sublogger
+            // get the sub logger
             if (names.length < 2) {
                 return this.subLoggers.get(name);
             }

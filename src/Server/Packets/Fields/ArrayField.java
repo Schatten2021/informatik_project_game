@@ -1,7 +1,6 @@
 package Server.Packets.Fields;
 
 import Abitur.Queue;
-import Server_old.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,8 +36,10 @@ public class ArrayField <T extends Field> implements Field {
     }
     public static <T extends Field> ArrayField<T> fromStream(InputStream stream) throws IOException {
         IntegerField length = IntegerField.fromStream(stream);
-        T[] data = util.genericArray(length.value);
+        //noinspection unchecked
+        T[] data = (T[]) new Field[length.value];
         for (int i = 0; i < length.value; i++) {
+            //noinspection unchecked
             data[i] = (T) T.fromStream(stream);
         }
         return new ArrayField<>(data);
