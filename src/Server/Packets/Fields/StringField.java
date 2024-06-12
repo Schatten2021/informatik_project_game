@@ -21,7 +21,17 @@ public class StringField implements Field {
     }
     public static StringField fromStream(InputStream stream) throws IOException {
         IntegerField size = IntegerField.fromStream(stream);
-        byte[] bytes = stream.readNBytes(size.value);
+        int pos = 0;
+        int available = stream.available();
+        byte[] bytes = new byte[size.value];
+        while (available > 0 && pos < bytes.length) {
+            int readCount = Math.min(available, bytes.length - pos);
+            System.arraycopy(stream.readNBytes(readCount), 0, bytes, pos, readCount);
+            available = stream.available();
+            pos += readCount;
+        }
+        if (pos < bytes.length)
+            throw new IOException("Stream did not read enough bytes");
         return new StringField(new String(bytes, StandardCharsets.UTF_8));
     }
 }

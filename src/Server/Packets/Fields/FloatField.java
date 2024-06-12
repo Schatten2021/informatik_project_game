@@ -17,7 +17,7 @@ public class FloatField implements Field {
     }
 
     public static FloatField fromStream(InputStream stream) throws IOException {
-        byte[] bytes = stream.readNBytes(4);
-        return new FloatField(bytes);
+        IntegerField data = IntegerField.fromStream(stream);
+        return new FloatField(Float.intBitsToFloat(data.value));
     }
 }

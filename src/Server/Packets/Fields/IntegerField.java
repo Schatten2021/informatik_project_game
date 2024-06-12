@@ -26,7 +26,18 @@ public class IntegerField implements Field {
     }
 
     public static IntegerField fromStream(InputStream stream) throws IOException {
-        byte[] bytes = stream.readNBytes(4);
+        byte[] bytes = new byte[4];
+        int pos = 0;
+        int available = stream.available();
+        // ensure that the call never blocks because unexpectedly receiving too few bytes and the stream not being closed.
+        while (available > 0 && pos < 4) {
+            int readBytes = Math.min(available, 4);
+            System.arraycopy(stream.readNBytes(readBytes), 0, bytes, pos, readBytes);
+            pos += readBytes;
+            available = stream.available();
+        }
+        if (pos < 4)
+            throw new IOException("Stream didn't contain enough bytes");
         return new IntegerField(bytes);
     }
 }
