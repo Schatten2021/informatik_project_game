@@ -13,6 +13,7 @@ import java.net.*;
 import java.util.Arrays;
 
 import Server.Packets.Upstream.Login;
+import Server.Packets.Upstream.SignUP;
 import logging.Logger;
 
 public class Connection {
@@ -21,7 +22,7 @@ public class Connection {
     private State status = State.NOT_CONNECTED;
 
     private final SocketAddress address;
-    private final Socket socket;
+    private Socket socket;
     private InputStream in;
     private OutputStream out;
 
@@ -34,7 +35,8 @@ public class Connection {
 
     private final Logger logger = new Logger("Server.Connection");
     private long lastHeartbeat = 0;
-    private static final long HeartbeatFrequency = 10; //millis
+    private static final long HeartbeatFrequency = 100; //millis
+    private boolean isSignup = false;
 
     public Connection(String host, int port) {
         this.socket = new Socket();
@@ -43,6 +45,7 @@ public class Connection {
     public void login(String username, String password) {
         this.username = username;
         this.password = password;
+        this.isSignup = false;
     }
     public void start() throws IOException {
         this.logger.info("Starting connection");
@@ -126,7 +129,10 @@ public class Connection {
         this.out = socket.getOutputStream();
         this.status = State.NOT_LOGGED_IN;
         this.logger.info("Connecting");
-        this.login();
+        if (this.isSignup)
+            this.signup();
+        else
+            this.login();
     }
     private synchronized void disconnect() {
         try {
@@ -134,6 +140,7 @@ public class Connection {
         } catch (Exception e) {
             this.logger.error(e.getMessage());
         }
+        this.socket = new Socket();
         this.loggedIn = false;
         try {
             this.senderThread.join();
@@ -173,6 +180,15 @@ public class Connection {
         this.loggedIn = true;
         this.status = State.OK;
     }
+    private synchronized void signup() throws IOException {
+        if (this.username == null || this.password == null) {
+            this.disconnect();
+            this.logger.error("Username and Password not supplied");
+        }
+        this.sendPacket(new SignUP(this.username, this.password));
+        this.loggedIn = true;
+        this.isSignup = false;
+    }
 
     private void sendPacket(Packet packet) throws IOException {
         try {
@@ -209,11 +225,18 @@ public class Connection {
             case 0x01 -> GameStart.fromStream(this.in);
             case 0x02 -> GameEnd.fromStream(this.in);
             case 0x03 -> RoundEnd.fromStream(this.in);
-            case 0x04 -> Abilities.fromStream(this.in);
+            case 0x04 -> PlayerInfo.fromStream(this.in);
             case 0x05 -> Effects.fromStream(this.in);
             case (byte) 0xFF -> Error.fromStream(this.in);
             default -> throw new IOException("Invalid packet id");
         };
         this.incoming.enqueue(packet);
+    }
+
+    public void signup(String username, String password) throws IOException {
+        // a bit hacky
+        this.username = username;
+        this.password = password;
+        this.isSignup = true;
     }
 }

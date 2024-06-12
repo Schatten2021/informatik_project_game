@@ -7,10 +7,10 @@ import Server.Packets.Packet;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Abilities extends Packet {
+public class PlayerInfo extends Packet {
     public static final byte id = 0x04;
     public final ArrayField<AbilityField> abilities;
-    public Abilities(ArrayField<AbilityField> abilities) {
+    public PlayerInfo(ArrayField<AbilityField> abilities) {
         this.abilities = abilities;
     }
 
@@ -23,7 +23,7 @@ public class Abilities extends Packet {
         return bytes;
     }
 
-    public static Abilities fromStream(InputStream stream) throws IOException {
-        return new Abilities(ArrayField.fromStream(stream));
+    public static PlayerInfo fromStream(InputStream stream) throws IOException {
+        return new PlayerInfo(ArrayField.fromStream(stream));
     }
 }

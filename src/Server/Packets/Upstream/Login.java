@@ -11,19 +11,10 @@ public class Login extends Packet {
     public static final byte id = 0x01;
     public String username;
     public String password;
-    private static final MessageDigest md;
-
-    static {
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public Login(String username, String password) {
         this.username = username;
-        this.password = new String(md.digest(password.getBytes()));
+        this.password = password;
     }
 
     @Override
