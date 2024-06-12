@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
+import java.util.Arrays;
 
 import Server.Packets.Upstream.Login;
 import logging.Logger;
@@ -43,7 +44,10 @@ public class Connection {
         this.username = username;
         this.password = password;
     }
-    public void start() {
+    public void start() throws IOException {
+        this.logger.info("Starting connection");
+
+        this.connect();
         if (receiverThread == null) {
             receiverThread = new Thread(this::receiveThread);
             receiverThread.start();
@@ -74,6 +78,10 @@ public class Connection {
 
     // internal methods
     private void receiveThread() {
+        while (true) {
+            if (this.senderThread != null) break;
+        }
+        this.logger.debug("Starting to listen to Server");
         while (this.senderThread.isAlive() && !this.socket.isClosed() && this.socket.isConnected()) {
             try {
                 this.receivePacket();
@@ -82,6 +90,8 @@ public class Connection {
                 this.disconnect();
             }
         }
+        this.disconnect();
+        this.logger.info("Stopping receiver thread");
     }
     private void senderThread() {
         while (this.receiverThread.isAlive() && !this.socket.isClosed() && this.socket.isConnected()) {
@@ -106,6 +116,8 @@ public class Connection {
             }
             this.outgoing.dequeue();
         }
+        this.disconnect();
+        this.logger.info("Stopping sender thread");
     }
     private synchronized void connect() throws IOException {
         this.loggedIn = false;
@@ -113,6 +125,7 @@ public class Connection {
         this.in = socket.getInputStream();
         this.out = socket.getOutputStream();
         this.status = State.NOT_LOGGED_IN;
+        this.logger.info("Connecting");
         this.login();
     }
     private synchronized void disconnect() {
@@ -134,6 +147,7 @@ public class Connection {
         }
         this.senderThread = null;
         this.receiverThread = null;
+        this.logger.warn("Disconnecting");
     }
     private synchronized void reconnect() throws IOException {
         IOException exception = null;
@@ -147,6 +161,7 @@ public class Connection {
                 exception = e;
             }
         }
+        this.logger.error("Couldn't reconnect");
         throw exception;
     }
     private synchronized void login() throws IOException {
@@ -166,6 +181,8 @@ public class Connection {
             this.reconnect();
             this.trySendPacket(packet);
         }
+        if (!(packet instanceof Heartbeat))
+            this.logger.debug("Sent packet: " + packet + " (" + Arrays.toString(packet.toBytes()) + ")");
     }
     private void receivePacket() throws IOException {
         try {
@@ -179,8 +196,13 @@ public class Connection {
 
     private void trySendPacket(Packet packet) throws IOException {
         this.out.write(packet.toBytes());
+        if (!(packet instanceof Heartbeat))
+            this.logger.debug("Attempted to send packet: " + packet + " (" + Arrays.toString(packet.toBytes()) + ")");
     }
     private void tryReceivePacket() throws IOException {
+        if (this.in.available() <= 0) {
+            return;
+        }
         byte id = this.in.readNBytes(1)[0];
         Packet packet = switch (id) {
             case 0x00 -> Heartbeat.fromStream(this.in);

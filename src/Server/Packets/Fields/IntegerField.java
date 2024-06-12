@@ -11,18 +11,19 @@ public class IntegerField implements Field {
     public IntegerField(byte[] value) {
         if (value.length != 4)
             throw new IllegalArgumentException("byte array length must be 4 to be an integer");
-        this.value = (value[0] & 0xFF)
-                | ((value[1] & 0xFF) << 8)
-                | ((value[2] & 0xFF) << 16)
-                | ((value[3] & 0xFF) << 24);
+        this.value = (value[3] & 0xFF)
+                | ((value[2] & 0xFF) << 8)
+                | ((value[1] & 0xFF) << 16)
+                | ((value[0] & 0xFF) << 24);
     }
     public byte[] getBytes() {
-        return new byte[]{
-                (byte) (value >> 24),
-                (byte) (value >> 16),
-                (byte) (value >> 8),
-                (byte) value
-        };
+
+        byte[] result = new byte[4];
+        result[0] = (byte) ((this.value & 0xFF000000) >> 24);
+        result[1] = (byte) ((this.value & 0x00FF0000) >> 16);
+        result[2] = (byte) ((this.value & 0x0000FF00) >> 8);
+        result[3] = (byte) ((this.value & 0x000000FF) >> 0);
+        return result;
     }
 
     public static IntegerField fromStream(InputStream stream) throws IOException {

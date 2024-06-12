@@ -28,8 +28,8 @@ public class Login extends Packet {
 
     @Override
     public byte[] toBytes() {
-        byte[] usernameBytes = username.getBytes();
-        byte[] passwordBytes = password.getBytes();
+        byte[] usernameBytes = new StringField(username).getBytes();
+        byte[] passwordBytes = new StringField(password).getBytes();
         byte[] bytes = new byte[usernameBytes.length + passwordBytes.length + 1];
         bytes[0] = id;
         System.arraycopy(usernameBytes, 0, bytes, 1, usernameBytes.length);
