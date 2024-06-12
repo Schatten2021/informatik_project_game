@@ -13,6 +13,7 @@ public class Logger {
         public logger(String name, List<LoggingHandler> handlers, Level level) {
             this.name = name;
             this.handlers = handlers;
+            this.level = level;
         }
         public logger getSubLogger(String name) {
             if (name.isEmpty()) {
