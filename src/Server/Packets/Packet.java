@@ -9,4 +9,7 @@ public abstract class Packet {
     public static Packet fromStream(InputStream stream) throws IOException {
         throw new RuntimeException("Not implemented yet");
     }
+    public String toString() {
+        return String.format("<%s>", this.getClass().getSimpleName());
+    }
 }

@@ -230,6 +230,10 @@ public class Connection {
             case (byte) 0xFF -> Error.fromStream(this.in);
             default -> throw new IOException("Invalid packet id");
         };
+        if (!(packet instanceof Heartbeat)) {
+            String msg = String.format("received packet: %s", packet);
+            this.logger.debug(msg);
+        }
         this.incoming.enqueue(packet);
     }
 
