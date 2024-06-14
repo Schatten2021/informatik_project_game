@@ -24,6 +24,6 @@ public class Abilities extends Packet {
     }
 
     public static Abilities fromStream(InputStream stream) throws IOException {
-        return new Abilities(ArrayField.fromStream(stream, AbilityField.class));
+        return new Abilities(ArrayField.fromStream(stream));
     }
 }

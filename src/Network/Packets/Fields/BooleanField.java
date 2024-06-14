@@ -18,8 +18,7 @@ public class BooleanField implements Field {
         };
     }
     public static BooleanField fromStream(InputStream stream) throws IOException {
-        long startTime = System.currentTimeMillis();
-        if (stream.available() <= 0 || (System.currentTimeMillis() - startTime) > readTimeoutDuration)
+        if (stream.available() <= 0)
             throw new IOException("Stream is empty");
         return new BooleanField(stream.read() > 0);
     }

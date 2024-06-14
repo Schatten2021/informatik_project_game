@@ -1,87 +1,40 @@
 package Network.Packets.Downstream;
 
-
-import Network.Packets.Fields.*;
+import Network.Packets.Fields.FloatField;
+import Network.Packets.Fields.StringField;
 import Network.Packets.Packet;
-import Network.Packets.util;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class GameStart extends Packet {
     public static final byte id = 0x01;
-    public final FloatField HP;
-    public final FloatField HPRegen;
-    public final FloatField MP;
-    public final FloatField MPRegen;
     public final StringField otherName;
-    public final FloatField otherHP;
-    public final FloatField otherHPRegen;
-    public final FloatField otherMP;
-    public final FloatField otherMPRegen;
-    public final ArrayField<AbilityUsed> abilitiesUsedSoFar;
-    public final IntegerField round;
-    public GameStart(FloatField HP,
-                     FloatField HPRegen,
-                     FloatField MP,
-                     FloatField MPRegen,
-                     StringField otherName,
-                     FloatField otherHP,
-                     FloatField otherHPRegen,
-                     FloatField otherMP,
-                     FloatField otherMPRegen,
-                     ArrayField<AbilityUsed> abilitiesUsedSoFar,
-                     IntegerField round) {
-        this.HP = HP;
-        this.HPRegen = HPRegen;
-        this.MP = MP;
-        this.MPRegen = MPRegen;
+    public final FloatField HP;
+    public final FloatField MP;
+    public GameStart(StringField otherName, FloatField HP, FloatField MP) {
         this.otherName = otherName;
-        this.otherHP = otherHP;
-        this.otherHPRegen = otherHPRegen;
-        this.otherMP = otherMP;
-        this.otherMPRegen = otherMPRegen;
-        this.abilitiesUsedSoFar = abilitiesUsedSoFar;
-        this.round = round;
+        this.HP = HP;
+        this.MP = MP;
     }
-    public GameStart(float HP, float HPRegen, float MP, float MPRegen,  String otherName, float otherHP, float otherHPRegen, float otherMP, float otherMPRegen, AbilityUsed[] abilitiesUsedSoFar, int round) {
-        this.HP = new FloatField(HP);
-        this.HPRegen = new FloatField(HPRegen);
-        this.MP = new FloatField(MP);
-        this.MPRegen = new FloatField(MPRegen);
+    public GameStart(String otherName, float HP, float MP) {
         this.otherName = new StringField(otherName);
-        this.otherHP = new FloatField(otherHP);
-        this.otherHPRegen = new FloatField(otherHPRegen);
-        this.otherMP = new FloatField(otherMP);
-        this.otherMPRegen = new FloatField(otherMPRegen);
-        this.abilitiesUsedSoFar = new ArrayField<>(abilitiesUsedSoFar);
-        this.round = new IntegerField(round);
+        this.HP = new FloatField(HP);
+        this.MP = new FloatField(MP);
     }
 
     @Override
     public byte[] toBytes() {
-        return util.generateBytes(id, this.HP, this.HPRegen, this.MP, this.MPRegen, this.otherName, this.otherHP, this.otherHPRegen, this.otherMP, this.otherMPRegen, this.abilitiesUsedSoFar, this.round);
+        byte[] stringBytes = otherName.getBytes();
+        byte[] result = new byte[stringBytes.length + 9];
+        result[0] = id;
+        System.arraycopy(stringBytes, 0, result, 1, stringBytes.length);
+        System.arraycopy(this.HP.getBytes(), 0, result, stringBytes.length + 1, HP.getBytes().length);
+        System.arraycopy(this.MP.getBytes(), 0, result, stringBytes.length + 5, MP.getBytes().length);
+        return result;
     }
 
     public static GameStart fromStream(InputStream stream) throws IOException {
-        return new GameStart(
-                FloatField.fromStream(stream),
-                FloatField.fromStream(stream),
-                FloatField.fromStream(stream),
-                FloatField.fromStream(stream),
-                StringField.fromStream(stream),
-                FloatField.fromStream(stream),
-                FloatField.fromStream(stream),
-                FloatField.fromStream(stream),
-                FloatField.fromStream(stream),
-                ArrayField.fromStream(stream, AbilityUsed.class),
-                IntegerField.fromStream(stream)
-        );
-    }
-
-    @Override
-    public String toString() {
-        String format = "<Packet \"GameStart\" (%.2f HP, +%.2f HP/round; %.2f MP, +%.2f MP/round) against \"%s\" (%.2f HP, +%.2f HP/round; %.2f MP, +%.2f MP/round) (round %d)>";
-        return String.format(format, this.HP.value, this.HPRegen.value, this.MP.value, this.MPRegen.value, this.otherName.value, this.otherHP.value, this.otherHPRegen.value, this.otherMP.value, this.otherMPRegen.value, this.round.value);
+        return new GameStart(StringField.fromStream(stream), FloatField.fromStream(stream), FloatField.fromStream(stream));
     }
 }

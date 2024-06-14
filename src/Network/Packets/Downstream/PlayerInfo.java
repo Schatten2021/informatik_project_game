@@ -24,6 +24,6 @@ public class PlayerInfo extends Packet {
     }
 
     public static PlayerInfo fromStream(DataInputStream in) throws IOException {
-        return new PlayerInfo(ArrayField.fromStream(in, IntegerField.class));
+        return new PlayerInfo(ArrayField.fromStream(in));
     }
 }

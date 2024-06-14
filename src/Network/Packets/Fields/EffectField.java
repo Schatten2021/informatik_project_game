@@ -1,32 +1,17 @@
 package Network.Packets.Fields;
 
-import Network.Packets.util;
-
-
 import java.io.IOException;
 import java.io.InputStream;
 
 public class EffectField implements Field {
-    public final IntegerField id;
-    public final StringField name;
-    public final IntegerField valueAffected;
-    public final IntegerField time;
-    public final FloatField min;
-    public final FloatField max;
-    public final BooleanField isPercent;
-    public final BooleanField hitsSelf;
-
-    public EffectField(int id, String name, int valueAffected, int time, float min, float max, boolean isPercent, boolean hitsSelf) {
-        this.id = new IntegerField(id);
-        this.name = new StringField(name);
-        this.valueAffected = new IntegerField(valueAffected);
-        this.time = new IntegerField(time);
-        this.min = new FloatField(min);
-        this.max = new FloatField(max);
-        this.isPercent = new BooleanField(isPercent);
-        this.hitsSelf = new BooleanField(hitsSelf);
-    }
-    public EffectField(IntegerField id, StringField name, IntegerField valueAffected, IntegerField time, FloatField min, FloatField max, BooleanField isPercent, BooleanField hitsSelf) {
+    private final int id;
+    private final String name;
+    private final int valueAffected;
+    private final int time;
+    private final float min;
+    private final float max;
+    private final boolean isPercent;
+    public EffectField(int id, String name, int valueAffected, int time, float min, float max, boolean isPercent) {
         this.id = id;
         this.name = name;
         this.valueAffected = valueAffected;
@@ -34,30 +19,32 @@ public class EffectField implements Field {
         this.min = min;
         this.max = max;
         this.isPercent = isPercent;
-        this.hitsSelf = hitsSelf;
     }
 
     public byte[] getBytes() {
-
-        return util.concat(id.getBytes(), name.getBytes(), valueAffected.getBytes(), time.getBytes(), min.getBytes(), max.getBytes(), isPercent.getBytes(), hitsSelf.getBytes());
+        byte[] stringBytes = new StringField(this.name).getBytes();
+        // ID: 4; Value affected: 4; Time: 4; Min: 4; max: 4; relative: 1; string: ?
+        // = 4 * 5 + 1 + ? = 21+
+        int size = 21 + stringBytes.length;
+        byte[] finalBytes = new byte[size];
+        System.arraycopy(new IntegerField(this.id).getBytes(), 0, finalBytes, 0, 4);
+        System.arraycopy(stringBytes, 0, finalBytes, 8, stringBytes.length);
+        System.arraycopy(new IntegerField(this.valueAffected).getBytes(), 0, finalBytes, 8 + stringBytes.length, 4);
+        System.arraycopy(new IntegerField(this.time).getBytes(), 0, finalBytes, 16 + stringBytes.length, 4);
+        System.arraycopy(new FloatField(this.min).getBytes(), 0, finalBytes, 24 + stringBytes.length, 4);
+        System.arraycopy(new FloatField(this.max).getBytes(), 0, finalBytes, 32 + stringBytes.length, 4);
+        System.arraycopy(new BooleanField(this.isPercent).getBytes(), 0, finalBytes, 40 + stringBytes.length, 4);
+        return finalBytes;
     }
 
     public static EffectField fromStream(InputStream stream) throws IOException {
-        return new EffectField(
-                IntegerField.fromStream(stream), //id
-                StringField.fromStream(stream), //name
-                IntegerField.fromStream(stream), // time
-                IntegerField.fromStream(stream), // valueAffected
-                FloatField.fromStream(stream), // min
-                FloatField.fromStream(stream), // max
-                BooleanField.fromStream(stream), // isPercent
-                BooleanField.fromStream(stream) // hitsSelf
-        );
-    }
-    public static EffectField fromStream() {
-        throw new RuntimeException("Empty fromStream called");
-    }
-    public String toString() {
-        return String.format("<Effect %s (value affected: %d) %.2f - %.2f (%d turns)>", this.name.value, this.valueAffected.value, this.min.value, this.max.value, this.time.value);
+        IntegerField id = IntegerField.fromStream(stream);
+        StringField name = StringField.fromStream(stream);
+        IntegerField valueAffected = IntegerField.fromStream(stream);
+        IntegerField time = IntegerField.fromStream(stream);
+        FloatField min = FloatField.fromStream(stream);
+        FloatField max = FloatField.fromStream(stream);
+        BooleanField isPercent = BooleanField.fromStream(stream);
+        return new EffectField(id.value, name.value, valueAffected.value, time.value, min.value, max.value, isPercent.value);
     }
 }

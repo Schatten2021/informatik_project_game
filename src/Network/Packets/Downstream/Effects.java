@@ -22,9 +22,6 @@ public class Effects extends Packet {
     }
 
     public static Effects fromStream(InputStream stream) throws IOException {
-        return new Effects(ArrayField.fromStream(stream, EffectField.class));
-    }
-    public String toString() {
-        return String.format("<Effects %s>", effects.toString());
+        return new Effects(ArrayField.fromStream(stream));
     }
 }

@@ -21,6 +21,7 @@ public class IntegerField implements Field {
                 | ((value[0] & 0xFF) << 24);
     }
     public byte[] getBytes() {
+
         byte[] result = new byte[4];
         result[0] = (byte) ((this.value & 0xFF000000) >> 24);
         result[1] = (byte) ((this.value & 0x00FF0000) >> 16);
@@ -34,9 +35,8 @@ public class IntegerField implements Field {
         int pos = 0;
         int available = stream.available();
         // ensure that the call never blocks because unexpectedly receiving too few bytes and the stream not being closed.
-        long readStartTime = System.currentTimeMillis();
-        while ((available > 0 || (System.currentTimeMillis() - readStartTime) > readTimeoutDuration) && pos < bytes.length) {
-            int readBytes = Math.min(available, 4 - pos);
+        while (available > 0 && pos < 4) {
+            int readBytes = Math.min(available, 4);
             System.arraycopy(stream.readNBytes(readBytes), 0, bytes, pos, readBytes);
             pos += readBytes;
             available = stream.available();
@@ -45,8 +45,5 @@ public class IntegerField implements Field {
         if (pos < 4)
             throw new IOException("Stream didn't contain enough bytes");
         return new IntegerField(bytes);
-    }
-    public String toString() {
-        return String.valueOf(this.value);
     }
 }

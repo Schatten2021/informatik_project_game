@@ -8,6 +8,9 @@ public class FloatField implements Field {
     public FloatField(float value) {
         this.value = value;
     }
+    public FloatField(byte[] value) {
+        this.value = Float.intBitsToFloat(new IntegerField(value).value);
+    }
 
     public byte[] getBytes() {
         return new IntegerField(Float.floatToIntBits(value)).getBytes();
@@ -16,10 +19,5 @@ public class FloatField implements Field {
     public static FloatField fromStream(InputStream stream) throws IOException {
         IntegerField data = IntegerField.fromStream(stream);
         return new FloatField(Float.intBitsToFloat(data.value));
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(this.value);
     }
 }
