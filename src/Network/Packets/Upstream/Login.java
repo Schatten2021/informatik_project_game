@@ -29,4 +29,9 @@ public class Login extends Packet {
     public static Login fromStream(InputStream stream) throws IOException {
         return new Login(StringField.fromStream(stream).value, StringField.fromStream(stream).value);
     }
+
+    @Override
+    public String toString() {
+        return String.format("<Packet \"Login\" for \"%s\">", this.username);
+    }
 }

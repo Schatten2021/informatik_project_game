@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class SignUP extends Packet {
-    private static final byte id = 0x04;
-    private final StringField username;
-    private final StringField password;
+    public static final byte id = 0x04;
+    public final StringField username;
+    public final StringField password;
     public SignUP(String username, String password) {
         this.username = new StringField(username);
         this.password = new StringField(password);

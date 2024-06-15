@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ArrayField <T extends Field> implements Field {
-    private final T[] fields;
+    public final T[] fields;
     public ArrayField(T[] fields) {
         this.fields = fields;
     }
