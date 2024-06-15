@@ -1,6 +1,8 @@
 package Network;
 
+import Abitur.Queue;
 import Network.Connection.Connection;
+import Network.Packets.Packet;
 import logging.Logger;
 
 import java.io.IOException;
@@ -86,5 +88,9 @@ public class Server {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars, StandardCharsets.UTF_8);
+    }
+
+    public Queue<Packet> getPackets() {
+        return this.connection.incoming;
     }
 }
