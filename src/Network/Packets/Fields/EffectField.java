@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class EffectField implements Field {
-    private final int id;
-    private final String name;
-    private final int valueAffected;
-    private final int time;
-    private final float min;
-    private final float max;
-    private final boolean isPercent;
+    public final int id;
+    public final String name;
+    public final int valueAffected;
+    public final int time;
+    public final float min;
+    public final float max;
+    public final boolean isPercent;
     public EffectField(int id, String name, int valueAffected, int time, float min, float max, boolean isPercent) {
         this.id = id;
         this.name = name;
