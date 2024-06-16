@@ -190,6 +190,17 @@ public class Logger {
     }
 
     /**
+     * Shorthand for {@code {@link #log}(String.format(format, values), Level.ERROR}.
+     * Will only log if the logger is configured as {@link Level#INFO} or lower.
+     * @param format The format that will be applied.
+     * @param values The values for the formatted string to be inserted.
+     * @see String#format
+     */
+    public void finfo(String format, Object ... values) {
+        this.log(String.format(format, values), Level.INFO);
+    }
+
+    /**
      * Shorthand for {@code {@link #log}(message, {@link Level#DEBUG}}.
      * Will only log if the logger is configured as {@link Level#DEBUG} or {@link Level#ALL}.
      * @param message The message to log. Will be turned into a string using the {@link #toString()} method.
@@ -219,6 +230,17 @@ public class Logger {
     }
 
     /**
+     * Shorthand for {@code {@link #log}(String.format(format, values), Level.ERROR}.
+     * Will only log if the logger is configured as {@link Level#WARNING} or lower.
+     * @param format The format that will be applied.
+     * @param values The values for the formatted string to be inserted.
+     * @see String#format
+     */
+    public void fwarn(String format, Object ... values) {
+        this.log(String.format(format, values), Level.WARNING);
+    }
+
+    /**
      * Shorthand for {@code {@link #log}(message, {@link Level#ERROR}}.
      * Will only log if the logger is configured as {@link Level#ERROR} or lower.
      * @param message The message to log. Will be turned into a string using the {@link #toString()} method.
@@ -245,5 +267,16 @@ public class Logger {
      */
     public void fatal(Object message) {
         this.log(message, Level.FATAL);
+    }
+
+    /**
+     * Shorthand for {@code {@link #log}(String.format(format, values), Level.ERROR}.
+     * Will only log if the logger is configured as {@link Level#FATAL} or lower.
+     * @param format The format that will be applied.
+     * @param values The values for the formatted string to be inserted.
+     * @see String#format
+     */
+    public void ffatal(String format, Object ... values) {
+        this.log(String.format(format, values), Level.FATAL);
     }
 }

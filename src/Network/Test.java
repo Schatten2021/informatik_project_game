@@ -20,7 +20,7 @@ public class Test {
         Logger root = new Logger("root");
         root.setLevel(Level.ALL);
         root.addHandler(new logging.ConsoleLogger());
-        Server server = new Server("localhost", 8080);
+        Server server = new Server("fms.nrw", 8080);
         server.login(username, password);
         try {
             Thread.sleep(100);
