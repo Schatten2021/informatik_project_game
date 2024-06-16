@@ -20,4 +20,9 @@ public class FloatField implements Field {
         IntegerField data = IntegerField.fromStream(stream);
         return new FloatField(Float.intBitsToFloat(data.value));
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.value);
+    }
 }

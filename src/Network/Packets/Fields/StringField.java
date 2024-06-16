@@ -3,6 +3,7 @@ package Network.Packets.Fields;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class StringField implements Field {
     public final String value;
@@ -24,14 +25,20 @@ public class StringField implements Field {
         int pos = 0;
         int available = stream.available();
         byte[] bytes = new byte[size.value];
-        while (available > 0 && pos < bytes.length) {
+        long readStartTime = System.currentTimeMillis();
+        while ((available > 0 || (System.currentTimeMillis() - readStartTime) < readTimeoutDuration) && pos < bytes.length) {
             int readCount = Math.min(available, bytes.length - pos);
             System.arraycopy(stream.readNBytes(readCount), 0, bytes, pos, readCount);
             available = stream.available();
             pos += readCount;
         }
-        if (pos < bytes.length)
+        if (pos < bytes.length) {
+            new Exception().printStackTrace();
             throw new IOException("Stream did not read enough bytes");
+        }
         return new StringField(new String(bytes, StandardCharsets.UTF_8));
+    }
+    public String toString() {
+        return '"' + this.value + "'";
     }
 }

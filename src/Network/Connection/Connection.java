@@ -19,7 +19,7 @@ import logging.Logger;
 public class Connection {
     public final Queue<Packet> incoming = new Queue<>();
     public final Queue<Packet> outgoing = new Queue<>();
-    private State status = State.NOT_CONNECTED;
+    public State status = State.NOT_CONNECTED;
 
     private final SocketAddress address;
     private Socket socket;
@@ -35,7 +35,7 @@ public class Connection {
 
     private final Logger logger = new Logger("Server.Connection");
     private long lastHeartbeat = 0;
-    private static final long HeartbeatFrequency = 100; //millis
+    private static final long HeartbeatFrequency = 1000; //millis
     private boolean isSignup = false;
 
     public Connection(String host, int port) {
@@ -97,6 +97,8 @@ public class Connection {
         this.logger.info("Stopping receiver thread");
     }
     private void senderThread() {
+        while (!this.receiverThread.isAlive()) {}
+        this.logger.info("starting to send to Server");
         while (this.receiverThread.isAlive() && !this.socket.isClosed() && this.socket.isConnected()) {
             long now = System.currentTimeMillis();
             if (now - lastHeartbeat > HeartbeatFrequency) {
@@ -142,18 +144,6 @@ public class Connection {
         }
         this.socket = new Socket();
         this.loggedIn = false;
-        try {
-            this.senderThread.join();
-        } catch (InterruptedException e) {
-            this.logger.error(e.getMessage());
-        }
-        try {
-            this.receiverThread.join();
-        } catch (InterruptedException e) {
-            this.logger.error(e.getMessage());
-        }
-        this.senderThread = null;
-        this.receiverThread = null;
         this.logger.warn("Disconnecting");
     }
     private synchronized void reconnect() throws IOException {
@@ -194,6 +184,7 @@ public class Connection {
         try {
             this.trySendPacket(packet);
         } catch (IOException e) {
+            this.logger.ferror("Got Exception \"%s\" while trying to send packet \"%s\"", e.getMessage(), packet.toString());
             this.reconnect();
             this.trySendPacket(packet);
         }
@@ -204,6 +195,7 @@ public class Connection {
         try {
             this.tryReceivePacket();
         } catch (IOException e) {
+            this.logger.ferror("Got Exception \"%s\" while trying to receive packets", e.getMessage());
             this.reconnect();
             this.tryReceivePacket();
         }
@@ -221,13 +213,13 @@ public class Connection {
         }
         byte id = this.in.readNBytes(1)[0];
         Packet packet = switch (id) {
-            case 0x00 -> Heartbeat.fromStream(this.in);
-            case 0x01 -> GameStart.fromStream(this.in);
-            case 0x02 -> GameEnd.fromStream(this.in);
-            case 0x03 -> RoundEnd.fromStream(this.in);
-            case 0x04 -> Abilities.fromStream(this.in);
-            case 0x05 -> Effects.fromStream(this.in);
-            case (byte) 0xFF -> Error.fromStream(this.in);
+            case Heartbeat.id -> Heartbeat.fromStream(this.in);
+            case GameStart.id -> GameStart.fromStream(this.in);
+            case GameEnd.id -> GameEnd.fromStream(this.in);
+            case RoundEnd.id -> RoundEnd.fromStream(this.in);
+            case Abilities.id -> Abilities.fromStream(this.in);
+            case Effects.id -> Effects.fromStream(this.in);
+            case (byte) Error.id -> Error.fromStream(this.in);
             default -> throw new IOException("Invalid packet id");
         };
         if (!(packet instanceof Heartbeat)) {
@@ -237,7 +229,7 @@ public class Connection {
         this.incoming.enqueue(packet);
     }
 
-    public void signup(String username, String password) throws IOException {
+    public void signup(String username, String password) {
         // a bit hacky
         this.username = username;
         this.password = password;
