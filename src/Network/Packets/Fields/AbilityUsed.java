@@ -13,10 +13,6 @@ public class AbilityUsed implements Field {
         this.abilityId = abilityId;
         this.value = value;
     }
-    public AbilityUsed(int abilityId, float value) {
-        this.abilityId = new IntegerField(abilityId);
-        this.value = new FloatField(value);
-    }
 
     @Override
     public byte[] getBytes() {
