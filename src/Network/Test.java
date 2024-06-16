@@ -33,15 +33,16 @@ public class Test {
                 continue;
             }
             Packet front = packets.front();
-            switch (front) {
-                case GameStart gameStart -> {
-                    root.info("got gameStart");
-                    if (!doNothing) server.send(new AbilityUsed(new IntegerField(1)));
-                    server.send(new RoundFinished());
-                }
-                case RoundEnd roundEnd -> root.info("got roundEnd");
-                case GameEnd gameEnd -> root.info("game ended");
-                case null, default -> root.info("got packet " + front);
+            if (front instanceof GameStart) {
+                root.info("got gameStart");
+                if (!doNothing) server.send(new AbilityUsed(new IntegerField(1)));
+                server.send(new RoundFinished());
+            } else if (front instanceof RoundEnd) {
+                root.info("got roundEnd");
+            } else if (front instanceof GameEnd) {
+                root.info("game ended");
+            } else {
+                root.info("got packet " + front);
             }
             packets.dequeue();
         }
