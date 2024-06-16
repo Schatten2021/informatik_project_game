@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2024-06-15T18:53:49.505Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.5.3 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="4OSsLr1N9IPsEEa1t0_f" version="24.5.3" type="device">
+<mxfile host="Electron" modified="2024-06-16T10:31:27.790Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.5.3 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="ZX4f8YiBfC4hEdvqBGa6" version="24.5.3" type="device">
   <diagram name="Page-1" id="1aXTQvaHOBbPSqx9FsLq">
-    <mxGraphModel dx="2359" dy="1979" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2643" dy="2144" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -287,7 +287,7 @@
         <mxCell id="jSCA2mAYh-UvqBloOtYx-7" value="PlayerInfo (0x06)" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="-630" y="170.5" width="140" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="jSCA2mAYh-UvqBloOtYx-8" value="Abilities (ids)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="jSCA2mAYh-UvqBloOtYx-7">
+        <mxCell id="jSCA2mAYh-UvqBloOtYx-8" value="Abilities (ids &amp;amp; values)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="jSCA2mAYh-UvqBloOtYx-7">
           <mxGeometry y="30" width="140" height="30" as="geometry" />
         </mxCell>
         <mxCell id="jSCA2mAYh-UvqBloOtYx-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#00FF00;" edge="1" parent="1" source="jSCA2mAYh-UvqBloOtYx-8" target="ZYOzPeOD46tJgNTAeWL3-57">
