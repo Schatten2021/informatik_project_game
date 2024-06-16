@@ -2,6 +2,7 @@ package Network;
 
 import Abitur.Queue;
 import Network.Connection.Connection;
+import Network.Connection.State;
 import Network.Packets.Packet;
 import logging.Logger;
 
@@ -92,5 +93,12 @@ public class Server {
 
     public Queue<Packet> getPackets() {
         return this.connection.incoming;
+    }
+    public void send(Packet packet) {
+        this.connection.outgoing.enqueue(packet);
+    }
+
+    public boolean alive() {
+        return this.connection.status != State.DISCONNECTED && this.connection.status != State.NOT_CONNECTED;
     }
 }

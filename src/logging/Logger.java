@@ -199,6 +199,17 @@ public class Logger {
     }
 
     /**
+     * Shorthand for {@code {@link #log}({@link String#format}(format, values), {@link Level#DEBUG}}.
+     * Will only log if the logger is configured as {@link Level#DEBUG} or {@link Level#ALL}.
+     * @param format The format that will be applied.
+     * @param values The values for the formatted string to be inserted.
+     * @see String#format
+     */
+    public void fdebug(String format, Object ... values) {
+        this.log(String.format(format, values), Level.DEBUG);
+    }
+
+    /**
      * Shorthand for {@code {@link #log}(message, {@link Level#WARNING}}.
      * Will only log if the logger is configured as {@link Level#WARNING} or lower.
      * @param message The message to log. Will be turned into a string using the {@link #toString()} method.
@@ -214,6 +225,17 @@ public class Logger {
      */
     public void error(Object message) {
         this.log(message, Level.ERROR);
+    }
+
+    /**
+     * Shorthand for {@code {@link #log}(String.format(format, values), Level.ERROR}.
+     * Will only log if the logger is configured as {@link Level#ERROR} or lower.
+     * @param format The format that will be applied.
+     * @param values The values for the formatted string to be inserted.
+     * @see String#format
+     */
+    public void ferror(String format, Object ... values) {
+        this.log(String.format(format, values), Level.ERROR);
     }
 
     /**

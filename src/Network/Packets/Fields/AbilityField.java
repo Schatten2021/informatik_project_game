@@ -29,7 +29,11 @@ public class AbilityField implements Field{
     public static AbilityField fromStream(InputStream stream) throws IOException {
         IntegerField id = IntegerField.fromStream(stream);
         StringField name = StringField.fromStream(stream);
-        ArrayField<IntegerField> EffectIds = ArrayField.fromStream(stream);
+        ArrayField<IntegerField> EffectIds = ArrayField.fromStream(stream, IntegerField.class);
         return new AbilityField(id, name, EffectIds);
+    }
+
+    public String toString() {
+        return String.format("<Ability %s (%s)>", this.name.value, this.effects.toString());
     }
 }
