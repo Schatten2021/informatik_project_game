@@ -14,6 +14,11 @@ public class AbilityUsed implements Field {
         this.value = value;
     }
 
+    public AbilityUsed(int id, float value) {
+        this.abilityId = new IntegerField(id);
+        this.value = new FloatField(value);
+    }
+
     @Override
     public byte[] getBytes() {
         return util.concat(abilityId.getBytes(), value.getBytes());
