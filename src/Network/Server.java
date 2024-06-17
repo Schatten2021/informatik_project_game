@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * Connects to a server.
@@ -51,12 +52,12 @@ public class Server {
     }
 
     /**
-     * Logs the current user in.
+     * Logs the current user in and start the connection.
      * @param username The username of the user.
      * @param password The password to the account of the user.
      */
     public void login(String username, String password) throws IOException {
-        String hash = bytesToHex(md.digest(password.getBytes()));
+        String hash = hash(password);
         logger.debug("logging in with hash: " + hash);
         this.connection.login(username, hash);
         this.connection.start();
@@ -66,10 +67,10 @@ public class Server {
      * Similar to {@link #login}, but creates a new account.
      * @param username The name of the player.
      * @param password The password to the account.
-     * @throws IOException
+     * @throws IOException When an IOException occurs while trying to sign up.
      */
     public void signup(String username, String password) throws IOException {
-        String hash = bytesToHex(md.digest(password.getBytes()));
+        String hash = hash(password);
         logger.debug("signing up with hash: " + hash);
         this.connection.signup(username, hash);
         this.connection.start();
@@ -77,18 +78,13 @@ public class Server {
 
     /**
      * Helper function for {@link #login} and {@link #signup}, because the passwords are hashed (not transmitting and storing plaintext passwords, duh).
-     * {@link MessageDigest#digest} however returns a byte array that has to be turned into a string, and I chose a hex-string.
-     * @param bytes The bytes to be turned into hex.
+     * @param string The password to be hashed.
      * @return The hexadecimal representation of the bytes.
      */
-    private static String bytesToHex(byte[] bytes) {
-        byte[] hexChars = new byte[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
-        }
-        return new String(hexChars, StandardCharsets.UTF_8);
+    private static String hash(String string) {
+        byte[] digest = md.digest(string.getBytes());
+        byte[] b64Encoded = Base64.getEncoder().encode(digest);
+        return new String(b64Encoded);
     }
 
     public Queue<Packet> getPackets() {

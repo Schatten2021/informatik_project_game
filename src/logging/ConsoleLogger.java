@@ -1,9 +1,16 @@
 package logging;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * A simple logger that logs to the console.
  */
 public class ConsoleLogger implements LoggingHandler {
+    /**
+     * Format in which the dates will be printed
+     */
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Logs the given message with the given Level to the console.
@@ -15,8 +22,8 @@ public class ConsoleLogger implements LoggingHandler {
     @Override
     public void log(String loggerName, String message, Level level) {
         if (level == Level.ERROR || level == Level.FATAL || level == Level.WARNING)
-            System.err.printf("[[%s]] [%s] %s%n", loggerName, level.name(), message);
+            System.err.printf("[[%s; %s]] [%s] %s%n", loggerName, dateFormat.format(new Date()), level.name(), message);
         else
-            System.out.printf("[[%s]] [%s] %s%n", loggerName, level.name(), message);
+            System.out.printf("[[%s; %s]] [%s] %s%n", loggerName, dateFormat.format(new Date()), level.name(), message);
     }
 }
