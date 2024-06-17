@@ -36,7 +36,7 @@ public class IntegerField implements Field {
         // ensure that the call never blocks because unexpectedly receiving too few bytes and the stream not being closed.
         long readStartTime = System.currentTimeMillis();
         while ((available > 0 || (System.currentTimeMillis() - readStartTime) > readTimeoutDuration) && pos < bytes.length) {
-            int readBytes = Math.min(available, 4);
+            int readBytes = Math.min(available, 4 - pos);
             System.arraycopy(stream.readNBytes(readBytes), 0, bytes, pos, readBytes);
             pos += readBytes;
             available = stream.available();
