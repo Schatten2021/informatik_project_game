@@ -1,5 +1,7 @@
 package Network.Packets.Downstream;
 
+import Network.Packets.Fields.AbilityUsed;
+import Network.Packets.Fields.ArrayField;
 import Network.Packets.Fields.FloatField;
 import Network.Packets.Fields.StringField;
 import Network.Packets.Packet;
@@ -19,6 +21,7 @@ public class GameStart extends Packet {
     public final FloatField otherHPRegen;
     public final FloatField otherMP;
     public final FloatField otherMPRegen;
+    public final ArrayField<AbilityUsed> abilitiesUsedSoFar;
     public GameStart(FloatField HP,
                      FloatField HPRegen,
                      FloatField MP,
@@ -27,7 +30,8 @@ public class GameStart extends Packet {
                      FloatField otherHP,
                      FloatField otherHPRegen,
                      FloatField otherMP,
-                     FloatField otherMPRegen) {
+                     FloatField otherMPRegen,
+                     ArrayField<AbilityUsed> abilitiesUsedSoFar) {
         this.HP = HP;
         this.HPRegen = HPRegen;
         this.MP = MP;
@@ -37,8 +41,9 @@ public class GameStart extends Packet {
         this.otherHPRegen = otherHPRegen;
         this.otherMP = otherMP;
         this.otherMPRegen = otherMPRegen;
+        this.abilitiesUsedSoFar = abilitiesUsedSoFar;
     }
-    public GameStart(float HP, float HPRegen, float MP, float MPRegen,  String otherName, float otherHP, float otherHPRegen, float otherMP, float otherMPRegen) {
+    public GameStart(float HP, float HPRegen, float MP, float MPRegen,  String otherName, float otherHP, float otherHPRegen, float otherMP, float otherMPRegen, AbilityUsed[] abilitiesUsedSoFar) {
         this.HP = new FloatField(HP);
         this.HPRegen = new FloatField(HPRegen);
         this.MP = new FloatField(MP);
@@ -48,6 +53,7 @@ public class GameStart extends Packet {
         this.otherHPRegen = new FloatField(otherHPRegen);
         this.otherMP = new FloatField(otherMP);
         this.otherMPRegen = new FloatField(otherMPRegen);
+        this.abilitiesUsedSoFar = new ArrayField<>(abilitiesUsedSoFar);
     }
 
     @Override
@@ -65,7 +71,8 @@ public class GameStart extends Packet {
                 FloatField.fromStream(stream),
                 FloatField.fromStream(stream),
                 FloatField.fromStream(stream),
-                FloatField.fromStream(stream)
+                FloatField.fromStream(stream),
+                ArrayField.fromStream(stream, AbilityUsed.class)
         );
     }
 
