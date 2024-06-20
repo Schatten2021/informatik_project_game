@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Game {
     private final Player player1; //always the user
     private final Player player2;
-    public final List<AbilityUsed> abilitiesUsed = new List<>();
+    public List<AbilityUsed> abilitiesUsed;
     public int round;
     public Game(GameStart packet, String playerName) {
         this.player1 = new Player(playerName, packet.HP.value, packet.MP.value, packet.HPRegen.value, packet.MPRegen.value);
@@ -25,7 +25,8 @@ public class Game {
             AbilityUsed ability = this.abilitiesUsed.getContent();
             this.abilitiesUsed.next();
             Effect[] abilitiesEffects = ability.ability.effects;
-            for (Effect effect : abilitiesEffects) {
+            for (int i = 0; i < abilitiesEffects.length; i++) {
+                Effect effect = abilitiesEffects[i];
                 boolean hits = effect.hitSelf == ability.player1 == player1;
                 boolean isActive = (effect.duration + ability.round) >= this.round;
                 if (hits && isActive) {

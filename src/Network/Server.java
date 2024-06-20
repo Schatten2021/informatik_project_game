@@ -3,11 +3,20 @@ package Network;
 import Abitur.Queue;
 import Network.Connection.Connection;
 import Network.Connection.State;
+import Network.Packets.Downstream.Abilities;
+import Network.Packets.Downstream.Effects;
+import Network.Packets.Downstream.GameEnd;
+import Network.Packets.Downstream.GameStart;
+import Network.Packets.Fields.AbilityField;
+import Network.Packets.Fields.EffectField;
+import Network.Packets.Heartbeat;
 import Network.Packets.Packet;
+import Network.dataStructures.Ability;
+import Network.dataStructures.Effect;
+import Network.dataStructures.Game;
 import logging.Logger;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -22,12 +31,14 @@ public class Server {
      * The internal connection.
      */
     private final Connection connection;
+
+    private Game game;
+
     /**
      * The logger for the Server module.
      */
     private final Logger logger = new Logger("Server");
 
-    private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
     /**
      * The {@link MessageDigest}, that can hash byte arrays with <a href="https://wikipedia.org/wiki/SHA-2">SHA-256</a>.
      */
@@ -45,9 +56,8 @@ public class Server {
      * Constructor for {@link Server}.
      * @param host The ip or url of the server to connect to.
      * @param port The port of the server. (e.g. 8080)
-     * @throws IOException When an IOException occurs, most likely because it couldn't connect to the server.
      */
-    public Server(String host, int port) throws IOException {
+    public Server(String host, int port) {
         this.connection = new Connection(host, port);
     }
 
@@ -74,7 +84,7 @@ public class Server {
         logger.debug("signing up with hash: " + hash);
         this.connection.signup(username, hash);
         this.connection.start();
-    };
+    }
 
     /**
      * Helper function for {@link #login} and {@link #signup}, because the passwords are hashed (not transmitting and storing plaintext passwords, duh).
@@ -96,5 +106,72 @@ public class Server {
 
     public boolean alive() {
         return this.connection.status != State.DISCONNECTED && this.connection.status != State.NOT_CONNECTED;
+    }
+
+    public void update() {
+        if (!this.alive()) {
+            this.logger.warn("Server is not connected");
+            return;
+        }
+        this.connection.update();
+        Queue<Packet> packets = this.connection.incoming;
+        Queue<Packet> unhandledPackets = new Queue<>();
+        while (!packets.isEmpty()) {
+            Packet packet = packets.front();
+            if (!this.handlePacket(packet))
+                unhandledPackets.enqueue(packet);
+            packets.dequeue();
+        }
+        while (!unhandledPackets.isEmpty()) {
+            Packet packet = unhandledPackets.front();
+            unhandledPackets.dequeue();
+            this.connection.incoming.enqueue(packet);
+        }
+    }
+
+    /**
+     * handles a packet sent by the server
+     * @param packet The packet sent by the server
+     * @return Whether the packet has been handled by this piece of code.
+     */
+    private boolean handlePacket(Packet packet) {
+        if (packet instanceof Heartbeat) {
+            return true;
+        } else if (packet instanceof GameStart) {
+            this.game = new Game((GameStart) packet, this.connection.getName());
+        }
+        if (packet instanceof Abilities) {
+            AbilityField[] abilities = ((Abilities) packet).abilities.fields;
+            for (AbilityField ability : abilities) {
+                Ability.create(ability);
+            }
+        } else if (packet instanceof Effects) {
+            EffectField[] effects = ((Effects) packet).effects.fields;
+            for (EffectField effect : effects) {
+                Effect.create(effect);
+            }
+        } else if (packet instanceof GameEnd) {
+            this.game = null;
+        } else {
+            return false;
+        }
+        return true;
+    }
+    public Ability getAbility(int id) {
+        return Ability.load(id);
+    }
+    public Ability[] getAbilities() {
+        return Ability.getAll();
+    }
+
+    /**
+     * Gets all active effects for this player.
+     * @return The active effects for this player.
+     */
+    public Effect[] getActiveEffects() {
+        return this.game.getActiveEffects(true);
+    }
+    public int getRound() {
+        return this.game.round;
     }
 }
