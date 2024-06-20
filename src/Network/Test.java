@@ -22,7 +22,7 @@ public class Test {
     public Test(String username, String password, boolean doNothing) throws IOException {
         root.setLevel(Level.ALL);
         root.addHandler(new logging.ConsoleLogger());
-        Server server = new Server("localhost", 8080);
+        Server server = new Server("fms.nrw", 8080);
         server.login(username, password);
         this.doNothing = doNothing;
         try {

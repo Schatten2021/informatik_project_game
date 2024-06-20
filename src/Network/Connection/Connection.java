@@ -241,4 +241,7 @@ public class Connection {
     public State getStatus() {
         return this.status;
     }
+    public String getName() {
+        return this.username;
+    }
 }
