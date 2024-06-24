@@ -23,7 +23,11 @@ public class AbilityField implements Field{
     }
 
     public static AbilityField fromStream(InputStream stream) throws IOException {
-        return new AbilityField(IntegerField.fromStream(stream), StringField.fromStream(stream), FloatField.fromStream(stream), ArrayField.fromStream(stream, IntegerField.class));
+        return new AbilityField(IntegerField.fromStream(stream), // id
+                StringField.fromStream(stream), //name
+                FloatField.fromStream(stream), // cost
+                ArrayField.fromStream(stream, IntegerField.class) // effects
+        );
     }
 
     public String toString() {

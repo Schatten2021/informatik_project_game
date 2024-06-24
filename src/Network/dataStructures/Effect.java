@@ -1,6 +1,5 @@
 package Network.dataStructures;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
@@ -46,7 +45,14 @@ public class Effect {
         return create(id, name, min, max, duration, valueAffected, relative, hitSelf);
     }
     public static Effect create(Network.Packets.Fields.EffectField effectField) {
-        return create(effectField.id, effectField.name, effectField.min, effectField.max, effectField.time, effectField.valueAffected, effectField.isPercent, effectField.hitsSelf);
+        return create(effectField.id.value,
+                effectField.name.value,
+                effectField.min.value,
+                effectField.max.value,
+                effectField.time.value,
+                effectField.valueAffected.value,
+                effectField.isPercent.value,
+                effectField.hitsSelf.value);
     }
     public static Effect load(Network.Packets.Fields.EffectField effectField) {
         if (effects.containsKey(effectField.id)) {

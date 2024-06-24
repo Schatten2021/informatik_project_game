@@ -8,9 +8,6 @@ public class FloatField implements Field {
     public FloatField(float value) {
         this.value = value;
     }
-    public FloatField(byte[] value) {
-        this.value = Float.intBitsToFloat(new IntegerField(value).value);
-    }
 
     public byte[] getBytes() {
         return new IntegerField(Float.floatToIntBits(value)).getBytes();

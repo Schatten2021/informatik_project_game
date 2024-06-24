@@ -59,7 +59,7 @@ public class GameStart extends Packet {
 
     @Override
     public byte[] toBytes() {
-        return util.generateBytes(id, this.HP, this.HPRegen, this.MP, this.MPRegen, this.otherName, this.otherHP, this.otherHPRegen, this.otherMP, this.otherMPRegen);
+        return util.generateBytes(id, this.HP, this.HPRegen, this.MP, this.MPRegen, this.otherName, this.otherHP, this.otherHPRegen, this.otherMP, this.otherMPRegen, this.abilitiesUsedSoFar, this.round);
     }
 
     public static GameStart fromStream(InputStream stream) throws IOException {
