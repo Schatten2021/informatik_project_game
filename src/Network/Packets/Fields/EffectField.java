@@ -2,6 +2,7 @@ package Network.Packets.Fields;
 
 import Network.Packets.util;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -37,6 +38,7 @@ public class EffectField implements Field {
     }
 
     public byte[] getBytes() {
+
         return util.concat(id.getBytes(), name.getBytes(), valueAffected.getBytes(), time.getBytes(), min.getBytes(), max.getBytes(), isPercent.getBytes(), hitsSelf.getBytes());
     }
 

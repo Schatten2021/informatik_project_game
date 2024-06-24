@@ -1,5 +1,6 @@
 package Network.Packets.Fields;
 
+
 import Network.Packets.util;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.io.InputStream;
 public class AbilityField implements Field{
     public final IntegerField id;
     public final StringField name;
+
     public final FloatField cost;
     public final ArrayField<IntegerField> effects;
     public AbilityField(IntegerField id, StringField name, FloatField cost, ArrayField<IntegerField> effects) {
