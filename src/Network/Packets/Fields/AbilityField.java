@@ -1,35 +1,36 @@
 package Network.Packets.Fields;
 
-
-import Network.Packets.util;
-
 import java.io.IOException;
 import java.io.InputStream;
 
 public class AbilityField implements Field{
     public final IntegerField id;
     public final StringField name;
-
-    public final FloatField cost;
     public final ArrayField<IntegerField> effects;
-    public AbilityField(IntegerField id, StringField name, FloatField cost, ArrayField<IntegerField> effects) {
+    public AbilityField(IntegerField id, StringField name, ArrayField<IntegerField> effects) {
         this.id = id;
         this.name = name;
-        this.cost = cost;
         this.effects = effects;
     }
 
     @Override
     public byte[] getBytes() {
-        return util.concat(id.getBytes(), name.getBytes(), cost.getBytes(), effects.getBytes());
+        byte[] idBytes = id.getBytes();
+        byte[] nameBytes = name.getBytes();
+        byte[] effectBytes = effects.getBytes();
+        int size = idBytes.length + nameBytes.length + effectBytes.length;
+        byte[] data = new byte[size];
+        System.arraycopy(idBytes, 0, data, 0, idBytes.length);
+        System.arraycopy(nameBytes, 0, data, idBytes.length, nameBytes.length);
+        System.arraycopy(effectBytes, 0, data, idBytes.length + nameBytes.length, effectBytes.length);
+        return data;
     }
 
     public static AbilityField fromStream(InputStream stream) throws IOException {
-        return new AbilityField(IntegerField.fromStream(stream), // id
-                StringField.fromStream(stream), //name
-                FloatField.fromStream(stream), // cost
-                ArrayField.fromStream(stream, IntegerField.class) // effects
-        );
+        IntegerField id = IntegerField.fromStream(stream);
+        StringField name = StringField.fromStream(stream);
+        ArrayField<IntegerField> EffectIds = ArrayField.fromStream(stream, IntegerField.class);
+        return new AbilityField(id, name, EffectIds);
     }
 
     public String toString() {
