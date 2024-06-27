@@ -1,5 +1,6 @@
 package Network.dataStructures;
 
+import Network.Packets.Fields.Field;
 import Network.Packets.Fields.IntegerField;
 
 import java.util.*;
@@ -32,10 +33,10 @@ public class Ability {
         return abilities.get(id);
     }
     public static Ability create(Network.Packets.Fields.AbilityField packetField) {
-        IntegerField[] effectIds = packetField.effects.fields;
+        Field[] effectIds = packetField.effects.fields;
         Effect[] effects = new Effect[effectIds.length];
         for (int i = 0; i < effectIds.length; i++) {
-            effects[i] = Effect.load(effectIds[i].value);
+            effects[i] = Effect.load(((IntegerField) effectIds[i]).value);
         }
         return create(packetField.id.value, packetField.name.value, effects, packetField.cost.value);
     }
