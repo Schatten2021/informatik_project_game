@@ -1,6 +1,7 @@
 package logging;
 import Abitur.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -75,6 +76,13 @@ public class Logger {
             String[] names = name.split("\\.", 2);
             if (!subLoggers.containsKey(names[0])) {
                 String loggerFullName = this.name + "." + names[0];
+                // copy handlers
+                List<LoggingHandler> handlers = new List<>();
+                this.handlers.toFirst();
+                while (this.handlers.hasAccess()) {
+                    handlers.append(this.handlers.getContent());
+                    this.handlers.next();
+                }
                 subLoggers.put(names[0], new logger(loggerFullName, handlers, this.level));
             }
 

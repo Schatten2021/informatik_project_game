@@ -13,6 +13,7 @@ public class util {
         int offset = 0;
         for (byte[] array : arrays) {
             System.arraycopy(array, 0, result, offset, array.length);
+            offset += array.length;
         }
         return result;
     }

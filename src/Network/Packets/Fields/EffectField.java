@@ -54,6 +54,9 @@ public class EffectField implements Field {
                 BooleanField.fromStream(stream) // hitsSelf
         );
     }
+    public static EffectField fromStream() {
+        throw new RuntimeException("Empty fromStream called");
+    }
     public String toString() {
         return String.format("<Effect %s (value affected: %d) %.2f - %.2f (%d turns)>", this.name.value, this.valueAffected.value, this.min.value, this.max.value, this.time.value);
     }

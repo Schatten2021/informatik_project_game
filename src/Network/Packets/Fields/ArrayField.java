@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public class ArrayField <T extends Field> implements Field {
+    private static final Logger logger = new Logger("Network.Packets.Fields.ArrayField");
     public final T[] fields;
     public ArrayField(T[] fields) {
         this.fields = fields;
@@ -38,6 +39,7 @@ public class ArrayField <T extends Field> implements Field {
             pos += elementBytes.length;
             queue.dequeue();
         }
+        logger.debug(Arrays.toString(bytes));
         return bytes;
     }
     public static <T extends Field> ArrayField<T> fromStream(InputStream stream, Class<T> clazz) throws IOException {
@@ -50,7 +52,7 @@ public class ArrayField <T extends Field> implements Field {
                 //noinspection unchecked
                 data[i] = (T) clazz.getMethod("fromStream", InputStream.class).invoke(null, stream);
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                new Logger("Server.Packets.Fields.ArrayField").ferror("couldn't find method \"fromStream\" on class %s", clazz.getName());
+                throw new RuntimeException("couldn't find method \"fromStream\" on class " + clazz.getName(), e);
             }
         }
         return new ArrayField<>(data);

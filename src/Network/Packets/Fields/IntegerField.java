@@ -1,10 +1,14 @@
 package Network.Packets.Fields;
 
+import logging.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 public class IntegerField implements Field {
     public final int value;
+    private static final Logger logger = new Logger("Network.Packets.Fields.IntegerField");
     public IntegerField(int value) {
         this.value = value;
     }
@@ -37,6 +41,7 @@ public class IntegerField implements Field {
             pos += readBytes;
             available = stream.available();
         }
+        logger.fdebug("read bytes %s", Arrays.toString(bytes));
         if (pos < 4)
             throw new IOException("Stream didn't contain enough bytes");
         return new IntegerField(bytes);

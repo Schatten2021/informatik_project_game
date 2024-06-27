@@ -41,7 +41,7 @@ public class Connection {
     private static final int maxRetries = 3;
 
     // technical things
-    private final Logger logger = new Logger("Server.Connection");
+    private final Logger logger = new Logger("Network.Connection");
     private long lastHeartbeat = 0;
     private boolean isSignup = false;
 
