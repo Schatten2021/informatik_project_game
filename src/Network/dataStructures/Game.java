@@ -3,11 +3,9 @@ package Network.dataStructures;
 import Abitur.List;
 import Network.Packets.Downstream.GameStart;
 
-import java.util.ArrayList;
-
 public class Game {
-    private final Player player1; //always the user
-    private final Player player2;
+    public final Player player1; //always the user
+    public final Player player2;
     public final List<AbilityUsed> abilitiesUsed = new List<>();
     public int round;
     public Game(GameStart packet, String playerName) {

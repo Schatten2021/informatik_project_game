@@ -9,8 +9,8 @@ import java.util.Arrays;
 
 public class Login extends Packet {
     public static final byte id = 0x01;
-    public String username;
-    public String password;
+    public final String username;
+    public final String password;
 
     public Login(String username, String password) {
         this.username = username;

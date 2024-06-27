@@ -55,8 +55,8 @@ public class Effect {
                 effectField.hitsSelf.value);
     }
     public static Effect load(Network.Packets.Fields.EffectField effectField) {
-        if (effects.containsKey(effectField.id)) {
-            return effects.get(effectField.id);
+        if (effects.containsKey(effectField.id.value)) {
+            return effects.get(effectField.id.value);
         }
         return create(effectField);
     }

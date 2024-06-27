@@ -1,8 +1,5 @@
 package Network;
 
-import logging.Level;
-import logging.Logger;
-
 import java.io.IOException;
 
 public class Test2 {

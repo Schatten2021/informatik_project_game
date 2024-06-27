@@ -25,7 +25,7 @@ public class IntegerField implements Field {
         result[0] = (byte) ((this.value & 0xFF000000) >> 24);
         result[1] = (byte) ((this.value & 0x00FF0000) >> 16);
         result[2] = (byte) ((this.value & 0x0000FF00) >> 8);
-        result[3] = (byte) ((this.value & 0x000000FF) >> 0);
+        result[3] = (byte) (this.value & 0x000000FF);
         return result;
     }
 

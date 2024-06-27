@@ -47,7 +47,6 @@ public class ArrayField <T extends Field> implements Field {
         //noinspection unchecked
         T[] data = (T[]) new Field[length.value];
         for (int i = 0; i < length.value; i++) {
-            //noinspection unchecked
             try {
                 //noinspection unchecked
                 data[i] = (T) clazz.getMethod("fromStream", InputStream.class).invoke(null, stream);
