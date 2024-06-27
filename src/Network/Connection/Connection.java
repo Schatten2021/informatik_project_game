@@ -179,20 +179,31 @@ public class Connection {
         if (this.in.available() <= 0)
             return;
         byte id = this.in.readNBytes(1)[0];
-        Packet packet = switch (id) {
-            case Heartbeat.id -> Heartbeat.fromStream(this.in);
-            case GameStart.id -> GameStart.fromStream(this.in);
-            case GameEnd.id -> GameEnd.fromStream(this.in);
-            case RoundEnd.id -> RoundEnd.fromStream(this.in);
-            case Abilities.id -> Abilities.fromStream(this.in);
-            case Effects.id -> Effects.fromStream(this.in);
-            case (byte) Error.id -> Error.fromStream(this.in);
-            default -> throw new IOException("Invalid packet id");
-        };
+        Packet packet = this.readPacket(id);
         if (!(packet instanceof Heartbeat)) {
             this.logger.fdebug("got packet %s", packet);
         }
         this.incoming.enqueue(packet);
+    }
+    private Packet readPacket(byte id) throws IOException {
+        switch (id) {
+            case Heartbeat.id:
+                return Heartbeat.fromStream(this.in);
+            case GameStart.id:
+                return GameStart.fromStream(this.in);
+            case GameEnd.id:
+                return GameEnd.fromStream(this.in);
+            case RoundEnd.id:
+                return RoundEnd.fromStream(this.in);
+            case Abilities.id:
+                return Abilities.fromStream(this.in);
+            case Effects.id:
+                return Effects.fromStream(this.in);
+            case Error.id:
+                return Error.fromStream(this.in);
+            default:
+                throw new IOException("Invalid packet id");
+        }
     }
 
     // write
