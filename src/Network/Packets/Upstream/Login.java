@@ -1,9 +1,11 @@
 package Network.Packets.Upstream;
 import Network.Packets.Fields.StringField;
 import Network.Packets.Packet;
+import logging.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 public class Login extends Packet {
     public static final byte id = 0x01;
@@ -23,6 +25,7 @@ public class Login extends Packet {
         bytes[0] = id;
         System.arraycopy(usernameBytes, 0, bytes, 1, usernameBytes.length);
         System.arraycopy(passwordBytes, 0, bytes, usernameBytes.length + 1, passwordBytes.length);
+        new Logger("Network.Packets.Upstream.Login").fdebug("Sending Packet Login with bytes %s", Arrays.toString(bytes));
         return bytes;
     }
 
