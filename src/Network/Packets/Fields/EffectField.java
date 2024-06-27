@@ -6,16 +6,26 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class EffectField implements Field {
-    public final int id;
-    public final String name;
-    public final int valueAffected;
-    public final int time;
-    public final float min;
-    public final float max;
-    public final boolean isPercent;
-    public final boolean hitsSelf;
+    public final IntegerField id;
+    public final StringField name;
+    public final IntegerField valueAffected;
+    public final IntegerField time;
+    public final FloatField min;
+    public final FloatField max;
+    public final BooleanField isPercent;
+    public final BooleanField hitsSelf;
 
     public EffectField(int id, String name, int valueAffected, int time, float min, float max, boolean isPercent, boolean hitsSelf) {
+        this.id = new IntegerField(id);
+        this.name = new StringField(name);
+        this.valueAffected = new IntegerField(valueAffected);
+        this.time = new IntegerField(time);
+        this.min = new FloatField(min);
+        this.max = new FloatField(max);
+        this.isPercent = new BooleanField(isPercent);
+        this.hitsSelf = new BooleanField(hitsSelf);
+    }
+    public EffectField(IntegerField id, StringField name, IntegerField valueAffected, IntegerField time, FloatField min, FloatField max, BooleanField isPercent, BooleanField hitsSelf) {
         this.id = id;
         this.name = name;
         this.valueAffected = valueAffected;
@@ -31,26 +41,21 @@ public class EffectField implements Field {
     }
 
     public static EffectField fromStream(InputStream stream) throws IOException {
-        IntegerField id = IntegerField.fromStream(stream);
-        StringField name = StringField.fromStream(stream);
-        IntegerField valueAffected = IntegerField.fromStream(stream);
-        IntegerField time = IntegerField.fromStream(stream);
-        FloatField min = FloatField.fromStream(stream);
-        FloatField max = FloatField.fromStream(stream);
-        BooleanField isPercent = BooleanField.fromStream(stream);
-        BooleanField hitsSelf = BooleanField.fromStream(stream);
-        return new EffectField(id.value, name.value, valueAffected.value, time.value, min.value, max.value, isPercent.value, hitsSelf.value);
-    }
-    public static EffectField fromStream() {
-        throw new RuntimeException("Empty fromStream called");
-    }
-    public static EffectField fromStream() {
-        throw new RuntimeException("Empty fromStream called");
+        return new EffectField(
+                IntegerField.fromStream(stream), //id
+                StringField.fromStream(stream), //name
+                IntegerField.fromStream(stream), // time
+                IntegerField.fromStream(stream), // valueAffected
+                FloatField.fromStream(stream), // min
+                FloatField.fromStream(stream), // max
+                BooleanField.fromStream(stream), // isPercent
+                BooleanField.fromStream(stream) // hitsSelf
+        );
     }
     public static EffectField fromStream() {
         throw new RuntimeException("Empty fromStream called");
     }
     public String toString() {
-        return String.format("<Effect %s (value affected: %d) %.2f - %.2f (%d turns)>", this.name, this.valueAffected, this.min, this.max, this.time);
+        return String.format("<Effect %s (value affected: %d) %.2f - %.2f (%d turns)>", this.name.value, this.valueAffected.value, this.min.value, this.max.value, this.time.value);
     }
 }

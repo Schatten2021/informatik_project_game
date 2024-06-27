@@ -23,8 +23,7 @@ public class Game {
             AbilityUsed ability = this.abilitiesUsed.getContent();
             this.abilitiesUsed.next();
             Effect[] abilitiesEffects = ability.ability.effects;
-            for (int i = 0; i < abilitiesEffects.length; i++) {
-                Effect effect = abilitiesEffects[i];
+            for (Effect effect : abilitiesEffects) {
                 boolean hits = effect.hitSelf == ability.player1 == player1;
                 boolean isActive = (effect.duration + ability.round) >= this.round;
                 if (hits && isActive) {

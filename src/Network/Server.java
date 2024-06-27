@@ -4,14 +4,12 @@ import Abitur.List;
 import Abitur.Queue;
 import Network.Connection.Connection;
 import Network.Connection.State;
-import Network.Packets.Downstream.Abilities;
-import Network.Packets.Downstream.Effects;
-import Network.Packets.Downstream.GameEnd;
-import Network.Packets.Downstream.GameStart;
-import Network.Packets.Fields.AbilityField;
-import Network.Packets.Fields.EffectField;
+import Network.Packets.Downstream.*;
+import Network.Packets.Fields.*;
 import Network.Packets.Heartbeat;
 import Network.Packets.Packet;
+import Network.Packets.Upstream.AbilityUsed;
+import Network.Packets.Upstream.RoundFinished;
 import Network.dataStructures.Ability;
 import Network.dataStructures.Effect;
 import Network.dataStructures.Game;
@@ -27,6 +25,7 @@ import java.util.Base64;
  * Used to transport data such as player data to the server where it will be stored and processed.
  * Required for online play.
  */
+@SuppressWarnings("unused")
 public class Server {
     /**
      * The internal connection.
@@ -34,6 +33,7 @@ public class Server {
     private final Connection connection;
 
     private Game game;
+    private final List<Game> previousGames = new List<>();
 
     /**
      * The logger for the Server module.
@@ -59,7 +59,7 @@ public class Server {
      * @param port The port of the server. (e.g. 8080)
      */
     public Server(String host, int port) {
-        this.connection = new Connection(host, port);
+        this.connection = new Connection(host, port, false);
     }
 
     /**
@@ -98,13 +98,6 @@ public class Server {
         return new String(b64Encoded);
     }
 
-    public Queue<Packet> getPackets() {
-        return this.connection.incoming;
-    }
-    public void send(Packet packet) {
-        this.connection.outgoing.enqueue(packet);
-    }
-
     public boolean alive() {
         return this.connection.status != State.DISCONNECTED && this.connection.status != State.NOT_CONNECTED;
     }
@@ -140,19 +133,25 @@ public class Server {
             return true;
         } else if (packet instanceof GameStart) {
             this.game = new Game((GameStart) packet, this.connection.getName());
-        }
-        if (packet instanceof Abilities) {
-            AbilityField[] abilities = ((Abilities) packet).abilities.fields;
-            for (AbilityField ability : abilities) {
-                Ability.create(ability);
+        } else if (packet instanceof Abilities) {
+            Field[] abilities = ((Abilities) packet).abilities.fields;
+            for (Field ability : abilities) {
+                Ability.create((AbilityField) ability);
             }
         } else if (packet instanceof Effects) {
-            EffectField[] effects = ((Effects) packet).effects.fields;
-            for (EffectField effect : effects) {
-                Effect.create(effect);
+            Field[] effectFields = ((Effects) packet).effects.fields;
+            for (Field effect : effectFields) {
+                Effect.create((EffectField) effect);
             }
         } else if (packet instanceof GameEnd) {
+            this.previousGames.append(this.game);
             this.game = null;
+        } else if (packet instanceof RoundEnd) {
+            RoundEnd roundEnd = (RoundEnd) packet;
+            Network.Packets.Fields.Field[] abilitiesUsed = roundEnd.abilitiesUsed.fields;
+            for (Network.Packets.Fields.Field abilityUsed : abilitiesUsed) {
+                this.game.abilitiesUsed.append(new Network.dataStructures.AbilityUsed((Network.Packets.Fields.AbilityUsed) abilityUsed));
+            }
         } else {
             return false;
         }
@@ -172,7 +171,25 @@ public class Server {
     public Effect[] getActiveEffects() {
         return this.game.getActiveEffects(true);
     }
+    public Effect[] getActiveEffectsFromLastGame() {
+        this.previousGames.toLast();
+        if (this.previousGames.isEmpty())
+            return null;
+        return this.previousGames.getContent().getActiveEffects(true);
+    }
     public int getRound() {
         return this.game.round;
+    }
+    public void useAbility(Ability ability) {
+        this.connection.outgoing.enqueue(new AbilityUsed(new IntegerField(ability.id)));
+    }
+    public void finishRound() {
+        this.connection.outgoing.enqueue(new RoundFinished());
+    }
+    public Game getCurrentGame() {
+        return this.game;
+    }
+    public boolean inGame() {
+        return this.game != null;
     }
 }
