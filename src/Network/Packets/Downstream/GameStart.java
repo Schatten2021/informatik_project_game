@@ -18,8 +18,6 @@ public class GameStart extends Packet {
     public final FloatField otherHPRegen;
     public final FloatField otherMP;
     public final FloatField otherMPRegen;
-    public final ArrayField<AbilityUsed> abilitiesUsedSoFar;
-    public final IntegerField round;
     public GameStart(FloatField HP,
                      FloatField HPRegen,
                      FloatField MP,
@@ -28,9 +26,7 @@ public class GameStart extends Packet {
                      FloatField otherHP,
                      FloatField otherHPRegen,
                      FloatField otherMP,
-                     FloatField otherMPRegen,
-                     ArrayField<AbilityUsed> abilitiesUsedSoFar,
-                     IntegerField round) {
+                     FloatField otherMPRegen) {
         this.HP = HP;
         this.HPRegen = HPRegen;
         this.MP = MP;
@@ -40,10 +36,8 @@ public class GameStart extends Packet {
         this.otherHPRegen = otherHPRegen;
         this.otherMP = otherMP;
         this.otherMPRegen = otherMPRegen;
-        this.abilitiesUsedSoFar = abilitiesUsedSoFar;
-        this.round = round;
     }
-    public GameStart(float HP, float HPRegen, float MP, float MPRegen,  String otherName, float otherHP, float otherHPRegen, float otherMP, float otherMPRegen, AbilityUsed[] abilitiesUsedSoFar, int round) {
+    public GameStart(float HP, float HPRegen, float MP, float MPRegen,  String otherName, float otherHP, float otherHPRegen, float otherMP, float otherMPRegen) {
         this.HP = new FloatField(HP);
         this.HPRegen = new FloatField(HPRegen);
         this.MP = new FloatField(MP);
@@ -53,13 +47,11 @@ public class GameStart extends Packet {
         this.otherHPRegen = new FloatField(otherHPRegen);
         this.otherMP = new FloatField(otherMP);
         this.otherMPRegen = new FloatField(otherMPRegen);
-        this.abilitiesUsedSoFar = new ArrayField<>(abilitiesUsedSoFar);
-        this.round = new IntegerField(round);
     }
 
     @Override
     public byte[] toBytes() {
-        return util.generateBytes(id, this.HP, this.HPRegen, this.MP, this.MPRegen, this.otherName, this.otherHP, this.otherHPRegen, this.otherMP, this.otherMPRegen, this.abilitiesUsedSoFar, this.round);
+        return util.generateBytes(id, this.HP, this.HPRegen, this.MP, this.MPRegen, this.otherName, this.otherHP, this.otherHPRegen, this.otherMP, this.otherMPRegen);
     }
 
     public static GameStart fromStream(InputStream stream) throws IOException {
@@ -72,15 +64,13 @@ public class GameStart extends Packet {
                 FloatField.fromStream(stream),
                 FloatField.fromStream(stream),
                 FloatField.fromStream(stream),
-                FloatField.fromStream(stream),
-                ArrayField.fromStream(stream, AbilityUsed.class),
-                IntegerField.fromStream(stream)
+                FloatField.fromStream(stream)
         );
     }
 
     @Override
     public String toString() {
-        String format = "<Packet \"GameStart\" (%.2f HP, +%.2f HP/round; %.2f MP, +%.2f MP/round) against \"%s\" (%.2f HP, +%.2f HP/round; %.2f MP, +%.2f MP/round) (round %d)>";
-        return String.format(format, this.HP.value, this.HPRegen.value, this.MP.value, this.MPRegen.value, this.otherName.value, this.otherHP.value, this.otherHPRegen.value, this.otherMP.value, this.otherMPRegen.value, this.round.value);
+        String format = "<Packet \"GameStart\" (%.2f HP, +%.2f HP/round; %.2f MP, +%.2f MP/round) against \"%s\" (%.2f HP, +%.2f HP/round; %.2f MP, +%.2f MP/round)>";
+        return String.format(format, this.HP.value, this.HPRegen.value, this.MP.value, this.MPRegen.value, this.otherName.value, this.otherHP.value, this.otherHPRegen.value, this.otherMP.value, this.otherMPRegen.value);
     }
 }
