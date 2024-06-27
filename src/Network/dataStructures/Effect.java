@@ -49,8 +49,8 @@ public class Effect {
         return create(effectField.id, effectField.name, effectField.min, effectField.max, effectField.time, effectField.valueAffected, effectField.isPercent, effectField.hitsSelf);
     }
     public static Effect load(Network.Packets.Fields.EffectField effectField) {
-        if (effects.containsKey(effectField.id)) {
-            return effects.get(effectField.id);
+        if (effects.containsKey(effectField.id.value)) {
+            return effects.get(effectField.id.value);
         }
         return create(effectField);
     }

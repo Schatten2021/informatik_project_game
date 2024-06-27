@@ -115,7 +115,6 @@ public class Connection {
     }
     private void connect() throws IOException {
         if (this.socket != null && (this.socket.isConnected() && !this.socket.isClosed())) {
-            new Exception().printStackTrace();
             this.logger.warn("already connected");
             return;
         }
